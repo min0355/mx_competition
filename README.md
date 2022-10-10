@@ -37,9 +37,11 @@
       
 ## 데이터 셋  
 - [데이터셋 24 종](https://www.kamp-ai.kr/front/dataset/AiData.jsp)  
+  
+    1. 제조 현장용 OCR 학습 제조 AI 데이터셋 : 중량을 표기하는 디지털 숫자의 이미지 분류, CNN / Resnet (residual connection) / momentum + SGD / adam  
+    2. 
 
 # 추진 계획   
 1. 신청 (10/11) : 김영민, 정홍연  
 2. 데이터 셋은 대회 시작일에 무작위로 주어질 예정 (10/26) 이므로 24 개 데이터 셋을 보고 미리 필요한 정보나 코드 search (~10/25)     
-
 
