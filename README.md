@@ -37,3 +37,4 @@
       - 장려상(KAIST K-Industry4.0 추진본부장상) : 상금 100만원(3팀)  
       
 ## 데이터 셋  
+- [데이터셋 24 종](https://www.kamp-ai.kr/front/dataset/AiData.jsp)  
