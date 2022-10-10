@@ -38,7 +38,7 @@
 ## 데이터 셋  
 - [데이터셋 24 종](https://www.kamp-ai.kr/front/dataset/AiData.jsp)  
   
-    1. 제조 현장용 OCR 학습 제조 AI 데이터셋 : 중량을 표기하는 디지털 숫자의 이미지 분류, CNN / Resnet (residual connection) / momentum + SGD / adam  
+    1. [제조 현장용 OCR 학습 제조 AI 데이터셋](https://www.kamp-ai.kr/front/dataset/AiDataDetail.jsp?AI_SEARCH=&page=1&DATASET_SEQ=1&EQUIP_SEL=&FILE_TYPE_SEL=&GUBUN_SEL=&WDATE_SEL=) : 중량을 표기하는 디지털 숫자의 이미지 분류, CNN / Resnet (residual connection) / momentum + SGD / adam   
     2. 
 
 # 추진 계획   
