@@ -36,7 +36,7 @@
       - 장려상(KAIST K-Industry4.0 추진본부장상) : 상금 100만원(3팀)  
       
 ## 데이터 셋  
-- 데이터셋 24 종 (사이트 참조)    
+- [데이터셋 24 종](https://www.kamp-ai.kr/front/dataset/AiData.jsp)      
 - 모든 데이터 셋엔 분석한 reference code 들과 데이터 설명이 기록되어 있음.  
 - 따라서, 백지에서 시작하는 대회가 아님.    
   
