@@ -16,4 +16,5 @@
 1. pandas_profiling 라이브러리 결과 (다운로드 확인 or code) : [Competition data profiling.html](https://github.com/min0355/mx_competition/blob/main/code/Competition%20data%20profiling.html)   
 
 ### 데이터 분석  
-* INSP 에 따른 불량율 추이 : https://github.com/min0355/mx_competition/blob/main/result/newplot.png?raw=true    
+* INSP 에 따른 불량율 추이 : 
+<img src="https://github.com/min0355/mx_competition/blob/main/result/newplot.png?raw=true" width="1000" height="350"/>      
