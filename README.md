@@ -13,4 +13,4 @@
 4. 분무 건조는 페이스트된 재료를 분무 건조기에 넣어 30 ~ 50 미크론 건조 입자로 만드는 작업  
 
 ### 데이터 이해  
-1. pandas_profiling 라이브러리 결과 : code 폴더 내 Competition data profiling.html 
+1. pandas_profiling 라이브러리 결과 (: [Competition data profiling.html](https://github.com/min0355/mx_competition/blob/main/code/Competition%20data%20profiling.html)   
