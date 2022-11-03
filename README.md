@@ -89,3 +89,25 @@
 4. ML 접목 시 이점  
 5. ML 이 커버하지 못 하는 부분에 대한 논의 (경고 등)     
 6. FULL SYSTEM 에 대한 예시 제안  
+
+
+numpy 를 np로 가져 오기 
+팬더를 PD로 가져오기 
+
+캄프 = pd. read_csv('D:/02_Works/18_KAMP/melting_tank.csv')
+D길이 = 캄프. 모양[0]
+S_Step = 30
+캄프에서 k 를 위해. 숫자:
+    k >= 1인 경우:
+        만약 abs(Kamp. MELT_WEIGHT[k] -캄프. MELT_WEIGHT[K-1]) >  100 : 
+
+            범위 (S_Step)에있는 s 의 경우 :
+                만약 abs(Kamp. MELT_WEIGHT [케이 - 1] - 캄프. MELT_WEIGHT[k + s]) < 500 : 
+                    단계 = 라운드 (abs (Kamp. MELT_WEIGHT [케이 - 1] - 캄프. MELT_WEIGHT[k + s])/(s+1))
+                    만약에 캄프. MELT_WEIGHT[k - 1] > 캄프. MELT_WEIGHT[k + s]:
+                        캄프. MELT_WEIGHT[k] = 캄프. MELT_WEIGHT[k - 1] - 단계
+                    그렇지 않으면:
+                        캄프. MELT_WEIGHT[k] = 캄프. MELT_WEIGHT [케이 - 1] + 단계
+                    휴식
+
+전투. to_csv('D:/02_Works/18_KAMP/melting_tank_mod.csv')
