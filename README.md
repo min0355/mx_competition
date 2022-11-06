@@ -187,3 +187,5 @@ regressorGRU.add(Dense(units=1))
 regressorGRU.compile(optimizer=SGD(lr=0.01, decay=1e-7, momentum=0.9, nesterov=False),loss='mean_squared_error')
 # Fitting to the training set
 regressorGRU.fit(X_train,y_train,epochs=50,batch_size=150)  
+
+참고 : https://www.kaggle.com/code/dimitreoliveira/deep-learning-for-time-series-forecasting  
