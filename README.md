@@ -124,4 +124,21 @@ model.add(LSTM(units = 32))
 model.add(Dropout(0.3))
 model.add(Dense(1))
 model.compile(loss = 'mse',optimizer = 'adam', metrics = ['mean_squared_error'])
-model.summary()
+model.summary()  
+
+수요 예측  
+def fit_model(train_X, train_Y, window_size = 1):
+    model = Sequential()
+    
+    model.add(LSTM(4, 
+                   input_shape = (1, window_size)))
+    model.add(Dense(1))
+    model.compile(loss = "mean_squared_error", 
+                  optimizer = "adam")
+    model.fit(train_X, 
+              train_Y, 
+              epochs = 100, 
+              batch_size = 1, 
+              verbose = 2)
+    
+    return(model)
