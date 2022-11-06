@@ -90,12 +90,18 @@
 5. ML 이 커버하지 못 하는 부분에 대한 논의 (경고 등)     
 6. FULL SYSTEM 에 대한 예시 제안  
 
+### TPOTC 일부 구동 결과  
 ![image](https://user-images.githubusercontent.com/62151520/200161638-131401f5-b5ae-4a49-9dab-ede2e459f3a9.png)
 ![image](https://user-images.githubusercontent.com/62151520/200161651-403a42a3-8d5a-4f0a-8b69-3579199fb873.png)
 
-
+### 하이퍼 파라미터  
+* AUC 기준  
 model.compile(loss=tf.keras.losses.BinaryCrossentropy(), optimizer=AdamW(learning_rate=1e-3, weight_decay=1e-4), metrics=[tf.keras.metrics.AUC()])
 early_stop = EarlyStopping(monitor='val_loss', patience=3, min_delta = 0.01)
 filename = os.path.join(model_path, 'melting_tank_checkpoint.h5')
 checkpoint = ModelCheckpoint(filename, monitor='val_loss', verbose=2, save_best_only=True, mode='auto')
-batch_size=64 일 때 1 사분면 최소값 
+batch_size=64 일 때 1 사분면 최소값  
+  
+* Precision 기준  
+
+### LSTM 구조  
