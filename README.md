@@ -89,3 +89,6 @@
 4. ML 접목 시 이점  
 5. ML 이 커버하지 못 하는 부분에 대한 논의 (경고 등)     
 6. FULL SYSTEM 에 대한 예시 제안  
+
+![image](https://user-images.githubusercontent.com/62151520/200161638-131401f5-b5ae-4a49-9dab-ede2e459f3a9.png)
+![image](https://user-images.githubusercontent.com/62151520/200161651-403a42a3-8d5a-4f0a-8b69-3579199fb873.png)
