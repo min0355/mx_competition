@@ -104,4 +104,24 @@ batch_size=64 일 때 1 사분면 최소값
   
 * Precision 기준  
 
-### LSTM 구조  
+### LSTM 구조   
+1. 자연어 처리 :  
+
+```model=Sequential()
+model.add(Embedding(max_features,250,mask_zero=True))
+model.add(LSTM(128,dropout=0.4, recurrent_dropout=0.4,return_sequences=True))
+model.add(LSTM(64,dropout=0.5, recurrent_dropout=0.5,return_sequences=False))
+model.add(Dense(num_classes,activation='softmax'))
+model.compile(loss='categorical_crossentropy',optimizer=Adam(lr=0.001),metrics=['accuracy'])
+model.summary()```    
+
+판매 예측    
+Build a sequential model with drop out for regularization
+model = Sequential()
+model.add(LSTM(units = 32,return_sequences=True,input_shape = (33,1)))
+model.add(Dropout(0.4))
+model.add(LSTM(units = 32))
+model.add(Dropout(0.3))
+model.add(Dense(1))
+model.compile(loss = 'mse',optimizer = 'adam', metrics = ['mean_squared_error'])
+model.summary()
