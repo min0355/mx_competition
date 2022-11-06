@@ -164,4 +164,26 @@ regressor.add(Dense(units=1))
 # Compiling the RNN
 regressor.compile(optimizer='rmsprop',loss='mean_squared_error')
 # Fitting to the training set
-regressor.fit(X_train,y_train,epochs=50,batch_size=32)  
+regressor.fit(X_train,y_train,epochs=50,batch_size=32)    
+  
+같은 데이터 GRU  
+# The GRU architecture
+regressorGRU = Sequential()
+# First GRU layer with Dropout regularisation
+regressorGRU.add(GRU(units=50, return_sequences=True, input_shape=(X_train.shape[1],1), activation='tanh'))
+regressorGRU.add(Dropout(0.2))
+# Second GRU layer
+regressorGRU.add(GRU(units=50, return_sequences=True, input_shape=(X_train.shape[1],1), activation='tanh'))
+regressorGRU.add(Dropout(0.2))
+# Third GRU layer
+regressorGRU.add(GRU(units=50, return_sequences=True, input_shape=(X_train.shape[1],1), activation='tanh'))
+regressorGRU.add(Dropout(0.2))
+# Fourth GRU layer
+regressorGRU.add(GRU(units=50, activation='tanh'))
+regressorGRU.add(Dropout(0.2))
+# The output layer
+regressorGRU.add(Dense(units=1))
+# Compiling the RNN
+regressorGRU.compile(optimizer=SGD(lr=0.01, decay=1e-7, momentum=0.9, nesterov=False),loss='mean_squared_error')
+# Fitting to the training set
+regressorGRU.fit(X_train,y_train,epochs=50,batch_size=150)  
