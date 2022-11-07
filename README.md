@@ -5,7 +5,6 @@
 2. 가이드 북 이해 (코드 필사 외) : 10/28     
 3. 공정 이해 : 10/30   
 
-
 ### 공정  
 1. 교반 속도 : 레미콘의 드럼 or 교반기 회전 속도  
 2. 공정 : 입자간 응결 응집이 효율적으로 일어나도록 유체나 입자에 교반을 통한 난류 변동을 가해 입자 floc (뭉치) 상 응집을 일으키는 것  
@@ -93,16 +92,6 @@
 ### TPOTC 일부 구동 결과  
 ![image](https://user-images.githubusercontent.com/62151520/200161638-131401f5-b5ae-4a49-9dab-ede2e459f3a9.png)
 ![image](https://user-images.githubusercontent.com/62151520/200161651-403a42a3-8d5a-4f0a-8b69-3579199fb873.png)
-
-### 하이퍼 파라미터  
-* AUC 기준  
-model.compile(loss=tf.keras.losses.BinaryCrossentropy(), optimizer=AdamW(learning_rate=1e-3, weight_decay=1e-4), metrics=[tf.keras.metrics.AUC()])
-early_stop = EarlyStopping(monitor='val_loss', patience=3, min_delta = 0.01)
-filename = os.path.join(model_path, 'melting_tank_checkpoint.h5')
-checkpoint = ModelCheckpoint(filename, monitor='val_loss', verbose=2, save_best_only=True, mode='auto')
-batch_size=64 일 때 1 사분면 최소값  
-  
-* Precision 기준  
 
 ### LSTM 구조   
 1. 자연어 처리 :  
