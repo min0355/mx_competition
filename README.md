@@ -181,7 +181,9 @@ regressorGRU.fit(X_train,y_train,epochs=50,batch_size=150)```
 참고 : https://www.kaggle.com/code/dimitreoliveira/time-series-forecasting-with-lstm-autoencoders/data    
 
 
-AUC : 47435  
-PRECISION : 47943    
-RECALL : 48314  
-PrecisionATRecall (recall=0.8) :  
+AUC : 47435   
+PRECISION : 47943     
+RECALL : 48314   
+PrecisionATRecall (recall=0.8) : 48321  
+false_negatives : 47544
+SensitivityAtSpecificity : 47665
