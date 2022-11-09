@@ -1,9 +1,3 @@
-# mx_competition : 검색을 막기 위해 분명한 단어 사용은 지양함.  
-
-# 대회 개시 
-1. 과제 : 알죠? 그 데이터 셋  
-2. 가이드 북 이해 (코드 필사 외) : 10/28     
-3. 공정 이해 : 10/30   
 
 ### 공정  
 1. 교반 속도 : 레미콘의 드럼 or 교반기 회전 속도  
@@ -58,125 +52,12 @@
 
 * **접목 할 모델을 빠르게 구현하는 게 가장 시급** 
 
-### 결과 (가이드의 알고리즘 그대로 사용 기준)  
-
-1. 2 개 Feature 만 사용 시 : 아래 결과 참조  
-  - precision: 0.9961  
-  - **recall: 0.8063**  
-  - **f1-score: 0.8912**  
-  - **accuracy: 0.8055**  
-  
-2. 3 개 (질량) 사용 시 : recall 0.70 (더 나빠짐.)  
-3. 3 개 (질량 대신 수분) 사용 시 : recall 0.70, f1 0.8258, accuracy 0.7059  
-
-### 데이터  
-1. 교반기 1 개의 데이터로 추정 (모터 스피드 고려 시)  
-2. 1 분에 10 개이니 추정컨대 6 초당 1 개의 row 수집  
-3. 시계열 처리 필요 (시간에 대한 기여도가 매우 높음. 일반 앙상블로는 89 점 정도가 최고)  
-4. RNN 계열 처리 필요, 모터 속도 0 이 되면 비우거나 하는 단계   
-5. **과제의 핵심 목표 리마인드 필요 (작업 환경 개선 및 생산성 향상)**    
-6. 24 시간 운영되는 데이터로 요일별 특성은 크지 않을 것으로 추정, 다만 NG 가 많이 나오는 시간대가 있는 지 확인 필요 (숙련자 몇 명이 라벨링하는 것으로 추정)  
-7. 일반적으로 바로 수집 가능한 데이터로 예측이 우선  
-8. 용량은 3,000 ~ 3,600 초 주기로 채워졌다 빠졌다 반복  
-9. 대략 10 INDEX 주기  
-10. 질량 변수 포함 여부 (물리적으로 의미 있다고는 생각)
-  
-### 자료   
-1. 파악한 공정 설명     
-2. **문제의 분명한 정의**  (사전 감지, 재료양 최소화, 품질 불량 원인 찾기 중) 
-3. ML 영역   
-4. ML 접목 시 이점  
-5. ML 이 커버하지 못 하는 부분에 대한 논의 (경고 등)     
-6. FULL SYSTEM 에 대한 예시 제안  
 
 ### TPOTC 일부 구동 결과  
 ![image](https://user-images.githubusercontent.com/62151520/200161638-131401f5-b5ae-4a49-9dab-ede2e459f3a9.png)
 ![image](https://user-images.githubusercontent.com/62151520/200161651-403a42a3-8d5a-4f0a-8b69-3579199fb873.png)
 
-### LSTM 구조   
-1. 자연어 처리 :  
 
-```model=Sequential()
-model.add(Embedding(max_features,250,mask_zero=True))
-model.add(LSTM(128,dropout=0.4, recurrent_dropout=0.4,return_sequences=True))
-model.add(LSTM(64,dropout=0.5, recurrent_dropout=0.5,return_sequences=False))
-model.add(Dense(num_classes,activation='softmax'))
-model.compile(loss='categorical_crossentropy',optimizer=Adam(lr=0.001),metrics=['accuracy'])
-model.summary()```    
-
-판매 예측    
-Build a sequential model with drop out for regularization
-model = Sequential()
-model.add(LSTM(units = 32,return_sequences=True,input_shape = (33,1)))
-model.add(Dropout(0.4))
-model.add(LSTM(units = 32))
-model.add(Dropout(0.3))
-model.add(Dense(1))
-model.compile(loss = 'mse',optimizer = 'adam', metrics = ['mean_squared_error'])
-model.summary()  
-
-수요 예측  
-def fit_model(train_X, train_Y, window_size = 1):
-    model = Sequential()
-    
-    model.add(LSTM(4, 
-                   input_shape = (1, window_size)))
-    model.add(Dense(1))
-    model.compile(loss = "mean_squared_error", 
-                  optimizer = "adam")
-    model.fit(train_X, 
-              train_Y, 
-              epochs = 100, 
-              batch_size = 1, 
-              verbose = 2)
-    
-    return(model)  
-    
-재고 예측  
-# The LSTM architecture
-regressor = Sequential()
-# First LSTM layer with Dropout regularisation
-regressor.add(LSTM(units=50, return_sequences=True, input_shape=(X_train.shape[1],1)))
-regressor.add(Dropout(0.2))
-# Second LSTM layer
-regressor.add(LSTM(units=50, return_sequences=True))
-regressor.add(Dropout(0.2))
-# Third LSTM layer
-regressor.add(LSTM(units=50, return_sequences=True))
-regressor.add(Dropout(0.2))
-# Fourth LSTM layer
-regressor.add(LSTM(units=50))
-regressor.add(Dropout(0.2))
-# The output layer
-regressor.add(Dense(units=1))
-
-# Compiling the RNN
-regressor.compile(optimizer='rmsprop',loss='mean_squared_error')
-# Fitting to the training set
-regressor.fit(X_train,y_train,epochs=50,batch_size=32)    
-  
-같은 데이터 GRU  
-# The GRU architecture
-regressorGRU = Sequential()
-# First GRU layer with Dropout regularisation
-regressorGRU.add(GRU(units=50, return_sequences=True, input_shape=(X_train.shape[1],1), activation='tanh'))
-regressorGRU.add(Dropout(0.2))
-# Second GRU layer
-regressorGRU.add(GRU(units=50, return_sequences=True, input_shape=(X_train.shape[1],1), activation='tanh'))
-regressorGRU.add(Dropout(0.2))
-# Third GRU layer
-regressorGRU.add(GRU(units=50, return_sequences=True, input_shape=(X_train.shape[1],1), activation='tanh'))
-regressorGRU.add(Dropout(0.2))
-# Fourth GRU layer
-regressorGRU.add(GRU(units=50, activation='tanh'))
-regressorGRU.add(Dropout(0.2))
-# The output layer
-regressorGRU.add(Dense(units=1))
-# Compiling the RNN
-regressorGRU.compile(optimizer=SGD(lr=0.01, decay=1e-7, momentum=0.9, nesterov=False),loss='mean_squared_error')
-# Fitting to the training set
-regressorGRU.fit(X_train,y_train,epochs=50,batch_size=150)```    
-  
 참고 : https://www.kaggle.com/code/dimitreoliveira/deep-learning-for-time-series-forecasting     
 참고 : https://www.kaggle.com/code/dimitreoliveira/time-series-forecasting-with-lstm-autoencoders/data    
 
