@@ -24,6 +24,8 @@ TO DO LIST
 4. 삭제 품번 체크 반영되도록 수정 -> 완료 
 5. 품번, PREFIX, 수량, 단위는 정확히 입력 필요하고 품명은 대충 넣어도 되도록 -> bom 완성도를 위해선 정확히 넣는걸로
 15. 엑셀 저장 -> 완료
+10. 버튼 순서 및 이름 수정 ->  완료
+
 
 
 6. EXE 파일로 만드는 방법 (PYTHON 미 설치에도 쓸 수 있도록) -> 김영진 매니저  
@@ -32,7 +34,6 @@ TO DO LIST
 
 
 9. 첨자가 설변 품번 개수만큼 올라가는 것 수정 (신규 품번 추가 + 설변 품번, 삭제 품번 모두 첨자는 1 번만 변경되어야 함.) 
-10. 버튼 순서 및 이름 수정 -> 수정 중   
 11. LP 소개 추가   
 12. 정규식 추가 (품번 잘못 입력 시 알림 창)  
 13. PARENT 가 무첨자일때 A 로 변경 되지 않는 문제 
@@ -479,7 +480,12 @@ class myWindow(QWidget):
         new_df = self.df_list[3]
         # self.show_dataframe_on_table(self.df_list[-1])
         self.show_dataframe_in_popup(old_df, new_df) 
-        self.save_dataframe_to_excel(new_df)    # 엑셀 신규 bom  만 저장 
+
+        for column in new_df.columns:
+            new_df[column] = new_df[column].apply(lambda x: x['text'] if isinstance(x, dict) and 'text' in x else x)
+
+        self.save_dataframe_to_excel(new_df)    # 엑셀 신규 bom 만 저장 
+        
         NamesInformer = ItemNameInformer(self.old_names, self.updated_names)
         NamesInformer.exec()
 
@@ -692,6 +698,7 @@ class myWindow(QWidget):
 
 
     def save_dataframe_to_excel(self, df):
+
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         file_path, _ = QFileDialog.getSaveFileName(self, "Save Excel File", "",
