@@ -25,22 +25,25 @@ TO DO LIST
 5. 품번, PREFIX, 수량, 단위는 정확히 입력 필요하고 품명은 대충 넣어도 되도록 -> bom 완성도를 위해선 정확히 넣는걸로
 15. 엑셀 저장 -> 완료
 10. 버튼 순서 및 이름 수정 ->  완료
+17. excel save 시 parent 정보 추가 -> 완료
+7. 최종 테이블 화면 색상 표시 (추가, 변경) -> 완료
+13. PARENT 가 무첨자일때 A 로 변경 되지 않는 문제 -> 완료
 
 
 
 6. EXE 파일로 만드는 방법 (PYTHON 미 설치에도 쓸 수 있도록) -> 김영진 매니저  
-7. 최종 테이블 화면 색상 표시 (추가, 변경) -> 박세훈 책임    
 8. 상단 버튼 최종 정리 (버튼 종류별로 색상 구분되면 편할 듯, 서치 버튼 좀 더 넓게 => 완료)  
 
 
-9. 첨자가 설변 품번 개수만큼 올라가는 것 수정 (신규 품번 추가 + 설변 품번, 삭제 품번 모두 첨자는 1 번만 변경되어야 함.) 
+
+9. 첨자가 설변 품번 개수만큼 올라가는 것 수정 (신규 품번 추가 + 설변 품번, 삭제 품번 모두 첨자는 1 번만 변경되어야 함.)
+20. 11 자리 품번 외엔 PARENT 자동 첨자 변경이 되지 않음  
 11. LP 소개 추가   
 12. 정규식 추가 (품번 잘못 입력 시 알림 창)  
-13. PARENT 가 무첨자일때 A 로 변경 되지 않는 문제 
+
 14. 리턴 버튼 추가 
 15. 상단 버튼 tap 
-16. 생성해야 할 품번 리스트 별도 출력 (확인용)
-17. excel save 시 parent 정보 추가
+16. 생성해야 할 품번 리스트 별도 출력 (확인용) -> 새 창 출력이 되나 품번이 중복해서 표기되는 등의 문제가 있음. 
 18. 삭제, 삽입 된 행도 고려하여 저장된 엑셀 파일을 그대로 복붙 할 수 있도록 최종 저장 BOM 구성
 19. FLAG 기입  
 
@@ -78,6 +81,10 @@ def tree_to_dataframe(tree_widget):
     columns = ["LVL", "PARENT", "PREFIX", "ITM", "ITM_DESC", "QTY", "UOM", "SRC", "PROC", "THREAD"]
     df = pd.DataFrame(data, columns=columns)
     return df
+
+# class MyTreeWidgetItem(QTreeWidgetItem):
+#     def __init__(self, parent=None):
+#         super(MyTreeWidgetItem, self).__init__(parent)
 
 class MyTreeWidget(QTreeWidget):
      
@@ -492,6 +499,7 @@ class myWindow(QWidget):
     def show_dataframe_in_popup(self, old_df, new_df):
         dialog = DataFrameDialog(self)
         dialog.show_dataframes(old_df, new_df)
+        dialog.setGeometry(100, 100, 1200, 800)
         dialog.exec()
 
     # def show_dataframe_on_table(self, df):
