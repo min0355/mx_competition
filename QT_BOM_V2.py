@@ -1,8 +1,8 @@
 # 13 번 수정하는 파일임 (kym)
 
 
-
 import os
+import re
 import sys
 
 import pandas as pd
@@ -33,6 +33,8 @@ TO DO LIST
 8. excel save 시 parent 정보 추가 -> 완료
 9. 최종 테이블 화면 색상 표시 (추가, 변경) -> 완료
 10. PARENT 가 무첨자일때 A 로 변경 되지 않는 문제 -> 완료
+15. LP 소개 추가 -> 완료 (간단히 LP 명만 기재)
+
 
 
 
@@ -43,8 +45,7 @@ TO DO LIST
 
 13. 첨자가 설변 품번 개수만큼 올라가는 것 수정 (신규 품번 추가 + 설변 품번, 삭제 품번 모두 첨자는 1 번만 변경되어야 함.)
 14. 11 자리 품번 외엔 PARENT 자동 첨자 변경이 되지 않음  
-15. LP 소개 추가   
-16. 정규식 추가 (품번 잘못 입력 시 알림 창)  
+16. 정규식 추가 (품번 잘못 입력 시 알림 창) -> 알림 이 후 다시 창이 뜨도록 수정 필요, 정규식 촘촘히 채울 것  
 17. 상단 버튼 tap 
 18. 생성해야 할 품번 리스트 별도 출력 (확인용) -> 새 창으로 출력 되나 품번이 중복되거나 오류 첨자로 표기되는 등의 문제가 있음. 
 19. 삭제, 삽입 된 행도 고려하여 저장된 엑셀 파일을 그대로 복붙 할 수 있도록 최종 저장 BOM 구성
@@ -225,8 +226,38 @@ class AddRowDialog(QDialog):
         vbox.addWidget(button_box)
 
         self.setLayout(vbox)
+    
+    def show_alert(self, message):
+        alert = QMessageBox()
+        alert.setWindowTitle("Alert")
+        alert.setText(message)
+        alert.exec()
+
+
+    def add_error_check(self):
+        error_messages = []
+        # Class 입력 규칙 검사
+        rule1 = r'^\d{6}-\d{5}[A-Za-z]?$|\d{6}-\d{5}[A-Za-z]?-(M|m)$'   #6자리 숫자 다음에 + '-'+ 5자리 숫자 + 첨자 + m(소재품번?)
+        rule2 = r'^S\d{7}$'                                             #S + 7자리
+        rule3 = r'^R\d{5,6}[a-zA-Z]?$'                                  #R + 5, 6자리 + 첨자
+        if not re.match(rule1, self.class_edit.text()) and not re.match(rule2, self.class_edit.text()) and not re.match(rule3, self.class_edit.text()):
+            error_messages.append('품번 입력 규칙에 맞지 않습니다.')
+        # Prefix 입력 규칙 검사
+        if not self.prefix_edit.text().isdigit() or len(self.prefix_edit.text()) != 4:
+            error_messages.append('Prefix는 4자리 숫자만 입력 가능합니다.')
+        # 수량 입력 규칙 검사
+        if not self.qty_edit.text().isdigit():
+            error_messages.append('수량은 숫자만 입력 가능합니다.')
+        # 에러메시지
+        error_message = '\n'.join(error_messages)
+        # 알림창 띄우기
+        if error_message:
+            self.show_alert(error_message)
+
+
 
     def get_row_data(self):
+        self.add_error_check() #에러체크
        
         return [self.class_edit.text(), self.prefix_edit.text(), self.itm_desc_edit.text(),
                 self.qty_edit.text(), self.uom_edit.text()]
@@ -569,11 +600,7 @@ class myWindow(QWidget):
                                 
         return s
     
-    def show_alert(self, message):
-        alert = QMessageBox()
-        alert.setWindowTitle("Alert")
-        alert.setText(message)
-        alert.exec()
+
 
     def find_nodes_by_name(self, parent_item, name):
         result = []
@@ -748,27 +775,6 @@ class myWindow(QWidget):
                                                    "Excel Files (*.xlsx);;All Files (*)", options=options)
         if file_path:
             df.to_excel(file_path, index=False)
-
-    
-# class DeveloperInfo(QWidget):
-#     def __init__(self, parent=None):
-#         super(DeveloperInfo, self).__init__(parent)
-
-#         self.setWindowTitle("Developer Info")
-
-#         layout = QVBoxLayout()
-
-#         info_label = QLabel("Ars Machina\n\n선행 제어 박세훈\n선행 기술 정홍연\n생산 기술 김영진\nTC 개발 손경호\n유닛 개발 김영민")
-#         layout.addWidget(info_label)
-
-#         ok_button = QPushButton("OK")
-#         ok_button.clicked.connect(self.close)
-#         layout.addWidget(ok_button)
-
-#         self.setLayout(layout)
-
-
-
 
 
 
