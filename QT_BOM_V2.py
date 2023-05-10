@@ -1,11 +1,10 @@
-# 13 번 수정하는 파일임 (kym)
-
-
 import os
 import re
 import sys
 
 import pandas as pd
+
+# from PyQt5.QtGui import QGuiApplication
 
 from PySide6.QtCore import Qt, QCoreApplication, QItemSelectionModel
 from PySide6.QtWidgets import (QApplication, QFileDialog, QHeaderView, QHBoxLayout, 
@@ -18,6 +17,7 @@ from PySide6 import QtGui
 import string
 
 QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+# QGuiApplication.setHighDpiScaleFactorRoundingPolicy(Qt.HighDpiScaleFactorRoundingPolicy.Round)
 
 
 
@@ -40,6 +40,7 @@ TO DO LIST
 
 
 11. EXE 파일로 만드는 방법 (PYTHON 미 설치에도 쓸 수 있도록) -> 김영진 매니저  
+18. 생성해야 할 품번 리스트 별도 출력 (확인용) -> 새 창으로 출력 되나 품번이 중복되거나 오류 첨자로 표기되는 등의 문제가 있음. 굳이 필요한지? 
 
 
 
@@ -47,7 +48,6 @@ TO DO LIST
 14. 11 자리 품번 외엔 PARENT 자동 첨자 변경이 되지 않음  
 16. 정규식 추가 (품번 잘못 입력 시 알림 창) -> 알림 이 후 다시 창이 뜨도록 수정 필요, 정규식 촘촘히 채울 것  
 17. 상단 버튼 tap 
-18. 생성해야 할 품번 리스트 별도 출력 (확인용) -> 새 창으로 출력 되나 품번이 중복되거나 오류 첨자로 표기되는 등의 문제가 있음. 굳이 필요한지? 
 19. 삭제, 삽입 된 행도 고려하여 저장된 엑셀 파일을 그대로 복붙 할 수 있도록 최종 저장 BOM 구성
 20. FLAG 기입  
 21. 리턴 버튼 추가
@@ -227,32 +227,46 @@ class AddRowDialog(QDialog):
 
         self.setLayout(vbox)
     
-    def show_alert(self, message):
-        alert = QMessageBox()
-        alert.setWindowTitle("Alert")
-        alert.setText(message)
-        alert.exec()
+
 
 
     def add_error_check(self):
         error_messages = []
-        # Class 입력 규칙 검사
-        rule1 = r'^\d{6}-\d{5}[A-Za-z]?$|\d{6}-\d{5}[A-Za-z]?-(M|m)$'   #6자리 숫자 다음에 + '-'+ 5자리 숫자 + 첨자 + m(소재품번?)
-        rule2 = r'^S\d{7}$'                                             #S + 7자리
-        rule3 = r'^R\d{5,6}[a-zA-Z]?$'                                  #R + 5, 6자리 + 첨자
+        # Class input rule checking
+        rule1 = r'^\d{6}-\d{5}[A-Za-z]?$|\d{6}-\d{5}[A-Za-z]?-(M|m )$' # 6 digit number followed by + '-' + 5 digit number + subscript + m (material part number?)
+        rule2 = r'^S\d{7}$' #S + 7 digits
+        rule3 = r'^R\d{5,6}[a-zA-Z]?$' #R + 5, 6 digits + subscript
         if not re.match(rule1, self.class_edit.text()) and not re.match(rule2, self.class_edit.text()) and not re.match(rule3, self.class_edit.text()):
             error_messages.append('품번 입력 규칙에 맞지 않습니다.')
-        # Prefix 입력 규칙 검사
+
         if not self.prefix_edit.text().isdigit() or len(self.prefix_edit.text()) != 4:
             error_messages.append('Prefix는 4자리 숫자만 입력 가능합니다.')
-        # 수량 입력 규칙 검사
+
         if not self.qty_edit.text().isdigit():
             error_messages.append('수량은 숫자만 입력 가능합니다.')
-        # 에러메시지
-        error_message = '\n'.join(error_messages)
-        # 알림창 띄우기
-        if error_message:
-            self.show_alert(error_message)
+
+        return error_messages
+
+
+    # def add_error_check(self):
+    #     error_messages = []
+    #     # Class 입력 규칙 검사
+    #     rule1 = r'^\d{6}-\d{5}[A-Za-z]?$|\d{6}-\d{5}[A-Za-z]?-(M|m)$'   #6자리 숫자 다음에 + '-'+ 5자리 숫자 + 첨자 + m(소재품번?)
+    #     rule2 = r'^S\d{7}$'                                             #S + 7자리
+    #     rule3 = r'^R\d{5,6}[a-zA-Z]?$'                                  #R + 5, 6자리 + 첨자
+    #     if not re.match(rule1, self.class_edit.text()) and not re.match(rule2, self.class_edit.text()) and not re.match(rule3, self.class_edit.text()):
+    #         error_messages.append('품번 입력 규칙에 맞지 않습니다.')
+    #     # Prefix 입력 규칙 검사
+    #     if not self.prefix_edit.text().isdigit() or len(self.prefix_edit.text()) != 4:
+    #         error_messages.append('Prefix는 4자리 숫자만 입력 가능합니다.')
+    #     # 수량 입력 규칙 검사
+    #     if not self.qty_edit.text().isdigit():
+    #         error_messages.append('수량은 숫자만 입력 가능합니다.')
+    #     # 에러메시지
+    #     error_message = '\n'.join(error_messages)
+    #     # 알림창 띄우기
+    #     if error_message:
+    #         self.show_alert(error_message)
 
 
 
@@ -262,7 +276,7 @@ class AddRowDialog(QDialog):
         return [self.class_edit.text(), self.prefix_edit.text(), self.itm_desc_edit.text(),
                 self.qty_edit.text(), self.uom_edit.text()]
     
-    # 추가한 부분 (위)
+ 
 
     def do_search(self, term):
         clist = self.findItems(term, Qt.MatchContains | Qt.MatchRecursive)
@@ -280,8 +294,7 @@ class AddRowDialog(QDialog):
     def item_clicked(self, item, column):
         self.parent().load_item_properties(item)
 
-    # 추가한 부분 (아래)
-
+ 
 
 class ItemNameInformer(QDialog):
     def __init__(self, oldnames, updatednames, parent=None):
@@ -315,11 +328,10 @@ class myWindow(QWidget):
         super().__init__()
         
         # V2 
-        self.change_node_name_executed = False
+        # self.change_node_name_executed = False
 
 
         self.setWindowTitle("BOM 자동 생성기 (Made by Ars Machina)")
-        # self.resize(500, 600)  # 위젯 사이즈
         
         self.df_list = []
         self.old_names = []
@@ -339,8 +351,6 @@ class myWindow(QWidget):
 
         tree_add_btn = QPushButton('신규 품번 추가', self)
         remove_btn = QPushButton('삭제 품번 체크', self)      
-        # color_alt_row_btn = QPushButton('설변 품번 체크', self)
-        # color_row_btn = QPushButton('지울 품번 체크', self)  
 
         # 수평 박스 배치
         hbox = QHBoxLayout()
@@ -351,8 +361,6 @@ class myWindow(QWidget):
         
         hbox.addWidget(tree_move_up_btn)
         hbox.addWidget(tree_move_down_btn)   
-        # hbox.addWidget(color_alt_row_btn)
-        # hbox.addWidget(color_row_btn)  
         
         hbox.addWidget(tree_del_btn)     
 
@@ -413,8 +421,6 @@ class myWindow(QWidget):
         tree_move_up_btn.clicked.connect(self.clickTreeMoveUpBtn)
         tree_move_down_btn.clicked.connect(self.clickTreeMoveDownBtn)
         
-        # color_alt_row_btn.clicked.connect(self.clickColorAltRowBtn)
-        # color_row_btn.clicked.connect(self.clickColorRowBtn)
         remove_btn.clicked.connect(self.clickRemoveBtn)
         transform_btn.clicked.connect(self.on_transform_button_clicked)
 
@@ -438,32 +444,42 @@ class myWindow(QWidget):
         if not selected_item:
             return
 
+        # V2  
+        # if not self.change_node_name_executed:
+        #     self.change_node_and_ancestors()
+        #     self.change_node_name_executed = True
+
+
         dialog = AddRowDialog(self)
         result = dialog.exec()
 
+
         if result == QDialog.Accepted:
-            new_item_data = dialog.get_row_data()
-            new_item = QTreeWidgetItem(new_item_data)
+            error_messages = dialog.add_error_check()
 
-            # Set the background color of the new item to yellow
-            yellow_background = QColor(255, 255, 0)
-            for i in range(new_item.columnCount()):
-                new_item.setBackground(i, yellow_background)
+            if error_messages:
+                self.show_alert('\n'.join(error_messages))
+                self.clickTreeAddBtn()  # Call the function again to open the dialog
 
-            selected_item.parent().insertChild(selected_item.parent().indexOfChild(selected_item) + 1, new_item)
+            else:
+                new_item_data = dialog.get_row_data()
+                new_item = QTreeWidgetItem(new_item_data)
 
+                # Set the background color of the new item to yellow
+                yellow_background = QColor(255, 255, 0)
+                for i in range(new_item.columnCount()):
+                    new_item.setBackground(i, yellow_background)
 
+                selected_item.parent().insertChild(selected_item.parent().indexOfChild(selected_item) + 1, new_item)
+       
+       
         new_item_data = ['', '', '', '', '']
         new_item = QTreeWidgetItem(new_item_data)
         # selected_item.addChild(new_item) 
 
 
-        # V2 추가 
-        if not self.change_node_name_executed:
-            self.execute_change_node_name()
 
-
-    # v2 추가 
+    # v2 
     def execute_change_node_name(self, start_item=None):
         old_name = self.old_name_edit.text()
         new_name = self.new_name_edit.text()
@@ -512,6 +528,11 @@ class myWindow(QWidget):
         selected_items = self.qtree.selectedItems()
         gray_background = QColor(192, 192, 192)
 
+        # V2
+        # if not self.change_node_name_executed:
+        #     self.change_node_and_ancestors()
+        #     self.change_node_name_executed = True
+
         for item in selected_items:
             for i in range(item.columnCount()):
                 item.setBackground(i, gray_background)
@@ -519,10 +540,7 @@ class myWindow(QWidget):
             # 추가 
             item.setData(0, Qt.UserRole, "deleted")
 
-        # V2 추가 
-        if not self.change_node_name_executed:
-                self.execute_change_node_name()
-
+         
 
     # def clickColorRowBtn(self):
     #     selected_items = self.qtree.selectedItems()
@@ -600,6 +618,11 @@ class myWindow(QWidget):
                                 
         return s
     
+    def show_alert(self, message):
+        alert = QMessageBox()
+        alert.setWindowTitle("Alert")
+        alert.setText(message)
+        alert.exec()
 
 
     def find_nodes_by_name(self, parent_item, name):
@@ -663,12 +686,11 @@ class myWindow(QWidget):
     #     self.initTableWidget(2)  
 
     def on_change_name_button_clicked(self):
-        print("Change name button clicked")
 
         # V2  
         if not self.change_node_name_executed:
-            start_item = self.qtree.currentItem()
-            self.execute_change_node_name(start_item)
+            self.change_node_and_ancestors()
+            self.change_node_name_executed = True
             
 
 
@@ -790,4 +812,4 @@ if __name__ == '__main__':
     w.setGeometry(margin, margin, screen_width - 2 * margin, screen_height - 2 * margin)
     
     w.show()
-    sys.exit(app.exec())   
+    sys.exit(app.exec())
